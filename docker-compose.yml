@@ -34,9 +34,7 @@ services:
   db:
     image: mysql:5.7.24
     container_name: app_mysql
-    command: "--default-authentication-plugin=mysql_native_password"
     restart: unless-stopped
-    tty: true
     ports:
       - "7776:3306"
     environment:
@@ -46,6 +44,7 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
+    working_dir: /var/www
     volumes:
-      - ./docker/mysql/data:/var/lib/mysql/
+      - .:/var/www
       - ./docker/mysql/conf/my.cnf:/etc/mysql/my.cnf

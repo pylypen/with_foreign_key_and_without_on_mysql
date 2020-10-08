@@ -13,8 +13,8 @@ class CreateModifyUsersTableV1 extends Migration
      */
     public function up()
     {
-        Schema::table('modify_users_table_v1', function (Blueprint $table) {
-            $table->unsignedBigInteger('avatar_id')->nullable();
+        Schema::table('users', function (Blueprint $table) {
+            $table->unsignedBigInteger('avatar_id')->after('remember_token')->nullable();
         });
     }
 
@@ -25,7 +25,7 @@ class CreateModifyUsersTableV1 extends Migration
      */
     public function down()
     {
-        Schema::table('modify_users_table_v1', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->removeColumn('avatar_id');
         });
     }
