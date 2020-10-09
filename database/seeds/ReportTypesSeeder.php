@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\LikeTypes;
+use App\Models\ReportTypes;
 
-class LikeTypesSeeder extends Seeder
+class ReportTypesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,15 +13,13 @@ class LikeTypesSeeder extends Seeder
     public function run()
     {
         $types = [
-            'like',
-            'smile',
-            'love',
-            'disappointment',
-            'laugh'
+            'Type I',
+            'Type II',
+            'Type III'
         ];
 
         foreach ($types as $type) {
-            LikeTypes::create([
+            ReportTypes::create([
                 'type' => $type,
                 'description' => 'Description'
             ]);
