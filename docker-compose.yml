@@ -1,34 +1,37 @@
-version: '3.2'
+version: '3'
 services:
 
-  #PHP Service
+  #Python Service
   app:
     build:
       context: .
-      dockerfile: ./docker/php/Dockerfile
-    image: php:7.1-fpm
-    container_name: app_php
-    restart: unless-stopped
-    tty: true
-    environment:
-      SERVICE_NAME: app
-      SERVICE_TAGS: dev
-    working_dir: /var/www
+      dockerfile: ./docker/python/Dockerfile
+    container_name: app_python
+    ports:
+      - "8000:8000"
     volumes:
-      - ./:/var/www
-      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./app:/app
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=homestead
+      - DB_USER=homestead
+      - DB_PASS=secret
+    depends_on:
+      - db
 
   #Nginx Service
-  webserver:
-    image: nginx:alpine
-    container_name: app_nginx
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "7777:80"
-    volumes:
-      - ./:/var/www
-      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+#  webserver:
+#    image: nginx:alpine
+#    container_name: app_nginx
+#    restart: unless-stopped
+#    tty: true
+#    ports:
+#      - "7777:80"
+#    #volumes:
+#      #- ./:/var/www
+#      #- ./docker/nginx/conf.d/:/etc/nginx/conf.d/
 
   #MySQL Service
   db:
@@ -44,7 +47,7 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
-    working_dir: /var/www
+    working_dir: /app
     volumes:
-      - .:/var/www
+      - ./app:/app
       - ./docker/mysql/conf/my.cnf:/etc/mysql/my.cnf
