@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'with_foreign_key',
+    'without_foreign_key',
+    'cli',
     'django_seed'
 ]
 
