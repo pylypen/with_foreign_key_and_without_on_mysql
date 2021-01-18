@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
     def __init__(self, stdout=None, stderr=None, no_color=False, force_color=False):
         super().__init__(stdout, stderr, no_color, force_color)
-        self.numbers_of_iterations = 100
+        self.numbers_of_iterations = 10000
 
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('With FK:'))
@@ -41,7 +41,7 @@ class Command(BaseCommand):
                 
                     WHERE `blog`.`type_id` IN (11, 30, 7)
                 )
-                LIMIT 1000
+                LIMIT 100
                 """
             cursor = connection.cursor()
             try:
@@ -77,7 +77,7 @@ class Command(BaseCommand):
                 
                     WHERE `blog`.`type` IN (11, 30, 7)
                 )
-                LIMIT 1000
+                LIMIT 100
                 """
             cursor = connection.cursor()
             try:
