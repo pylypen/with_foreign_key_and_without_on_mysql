@@ -4,6 +4,8 @@ from with_foreign_key.models import Comments as CommentsWith
 from without_foreign_key.models import Comments as CommentsWithout
 from django.db import connection
 import time
+from with_foreign_key.models import BlogTypes as BlogTypesFK
+from without_foreign_key.models import BlogTypes
 
 
 class Command(BaseCommand):
@@ -11,7 +13,7 @@ class Command(BaseCommand):
 
     def __init__(self, stdout=None, stderr=None, no_color=False, force_color=False):
         super().__init__(stdout, stderr, no_color, force_color)
-        self.numbers_of_iterations = 10000
+        self.numbers_of_iterations = 1000
 
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('With FK:'))
@@ -22,6 +24,7 @@ class Command(BaseCommand):
 
     def with_fk(self):
         counts = 0
+        random_blog_types = BlogTypesFK.objects.order_by('?').values_list('id', flat=True)[:5]
 
         for i in range(self.numbers_of_iterations):
             start_time = time.time()
@@ -39,10 +42,10 @@ class Command(BaseCommand):
                 
                     RIGHT JOIN `with_foreign_key_users` AS `user` ON `blog`.`created_by_id` = `user`.`id`
                 
-                    WHERE `blog`.`type_id` IN (11, 30, 7)
+                    WHERE `blog`.`type_id` IN ({}, {}, {}, {}, {})
                 )
                 LIMIT 100
-                """
+                """.format(*random_blog_types)
             cursor = connection.cursor()
             try:
                 cursor.execute(sql)
@@ -56,6 +59,7 @@ class Command(BaseCommand):
 
     def without_fk(self):
         counts = 0
+        random_blog_types = BlogTypes.objects.order_by('?').values_list('id', flat=True)[:5]
 
         for i in range(self.numbers_of_iterations):
             start_time = time.time()
@@ -75,10 +79,10 @@ class Command(BaseCommand):
                 
                     RIGHT JOIN `without_foreign_key_users` AS `user` ON `blog`.`created_by` = `user`.`id`
                 
-                    WHERE `blog`.`type` IN (11, 30, 7)
+                    WHERE `blog`.`type` IN ({}, {}, {}, {}, {})
                 )
                 LIMIT 100
-                """
+                """.format(*random_blog_types)
             cursor = connection.cursor()
             try:
                 cursor.execute(sql)
